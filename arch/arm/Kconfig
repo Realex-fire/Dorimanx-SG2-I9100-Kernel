@@ -299,6 +299,7 @@ config ARCH_MULTIPLATFORM
 	depends on MMU
 	select ARM_PATCH_PHYS_VIRT
 	select AUTO_ZRELADDR
+	select CLKSRC_OF
 	select COMMON_CLK
 	select MULTI_IRQ_HANDLER
 	select SPARSE_IRQ
