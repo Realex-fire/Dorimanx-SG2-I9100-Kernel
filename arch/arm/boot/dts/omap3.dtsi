@@ -56,7 +56,7 @@
 			ti,hwmods = "mpu";
 		};
 
-		iva {
+		iva: iva {
 			compatible = "ti,iva2.2";
 			ti,hwmods = "iva";
 
