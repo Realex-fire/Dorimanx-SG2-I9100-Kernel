@@ -474,6 +474,31 @@ check_prot:
 			pr_debug("Forcing ImmediateData=No + InitialR2T=Yes for"
 				 " T10-PI enabled ISER session\n");
 		}
+		/*
+		 * ISER currently requires that ImmediateData + Unsolicited
+		 * Data be disabled when protection / signature MRs are enabled.
+		 */
+check_prot:
+		if (sess->se_sess->sup_prot_ops &
+		   (TARGET_PROT_DOUT_STRIP | TARGET_PROT_DOUT_PASS |
+		    TARGET_PROT_DOUT_INSERT)) {
+
+			sprintf(buf, "ImmediateData=No");
+			if (iscsi_change_param_value(buf, conn->param_list, 0) < 0) {
+				iscsit_tx_login_rsp(conn, ISCSI_STATUS_CLS_TARGET_ERR,
+						    ISCSI_LOGIN_STATUS_NO_RESOURCES);
+				return -1;
+			}
+
+			sprintf(buf, "InitialR2T=Yes");
+			if (iscsi_change_param_value(buf, conn->param_list, 0) < 0) {
+				iscsit_tx_login_rsp(conn, ISCSI_STATUS_CLS_TARGET_ERR,
+						    ISCSI_LOGIN_STATUS_NO_RESOURCES);
+				return -1;
+			}
+			pr_debug("Forcing ImmediateData=No + InitialR2T=Yes for"
+				 " T10-PI enabled ISER session\n");
+		}
 	}
 
 	return 0;
